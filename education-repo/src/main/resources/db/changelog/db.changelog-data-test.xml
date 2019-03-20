@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd"
+                   logicalFilePath="db.changelog-data-test.xml">
+
+    <changeSet id="data-test-0" author="programmer" context="dev">
+        <insert tableName="person">
+            <column name="last_name">Иванов</column>
+            <column name="first_name">Иван</column>
+            <column name="middle_name">Иванович</column>
+        </insert>
+
+        <insert tableName="users">
+            <column name="login">ivanov</column>
+            <column name="password">{bcrypt}$2a$10$ozs8PePF36zdYf9giH9dH.i884KrgDRBiCQKWXcLovY0kSC4RY1f2</column>
+            <column name="person_id">1</column>
+            <column name="enabled">true</column>
+        </insert>
+
+        <insert tableName="users_setting">
+            <column name="user_id">1</column>
+            <column name="locale_id">1</column>
+            <column name="timezone_id">1</column>
+        </insert>
+
+        <insert tableName="users_state">
+            <column name="code">0</column>
+            <column name="user_id">1</column>
+        </insert>
+
+        <insert tableName="users_groups">
+            <column name="user_id">1</column>
+            <column name="group_id">5</column>
+        </insert>
+
+        <insert tableName="groups_roles">
+            <column name="group_id">5</column>
+            <column name="role_id">2</column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="data-test-1" author="programmer" context="dev">
+        <insert tableName="faculty">
+            <column name="name">Трудовая деятельность</column>
+            <column name="enabled">true</column>
+        </insert>
+
+        <insert tableName="training">
+            <column name="opened_at" valueDate="now()"/>
+            <column name="faculty_id">1</column>
+            <column name="name">Java SE 6 Programmer Certified Professional 1Z0-851</column>
+            <column name="enabled">true</column>
+        </insert>
+
+        <!--<insert tableName="training_plan">-->
+        <!--<column name="training_id">1</column>-->
+        <!--<column name="tutor_id">2</column>-->
+        <!--<column name="enabled">true</column>-->
+        <!--</insert>-->
+
+        <!--<insert tableName="training_plan_test">-->
+        <!--<column name="training_plan_id">1</column>-->
+        <!--<column name="type">1</column>-->
+        <!--<column name="enabled">true</column>-->
+        <!--</insert>-->
+
+        <!--<sql splitStatements="false">-->
+        <!--<![CDATA[-->
+        <!--insert into question(id, training_plan_test_id, name, type, enabled)-->
+        <!--values (1, 1, 'Дано:-->
+        <!--1. enum Animals {-->
+        <!--2. DOG("woof"), CAT("meow"), FISH("burble");-->
+        <!--3. String sound;-->
+        <!--4. Animals(String s) { sound = s; }-->
+        <!--5. }-->
+        <!--6. class TestEnum {-->
+        <!--7. static Animals a;-->
+        <!--8. public static void main(String[] args) {-->
+        <!--9. System.out.println(a.DOG.sound + " " + a.FISH.sound);-->
+        <!--10. }-->
+        <!--11. }-->
+        <!--Какой будет результат?', 0, true);-->
+
+        <!--insert into answer(id, question_id, name, queue, correct, enabled)-->
+        <!--values(1, 1, 'woof burble', 1, true, true);-->
+        <!--insert into answer(id, question_id, name, queue, correct, enabled)-->
+        <!--values(2, 1, 'Multiple compilation errors', 2, false, true);-->
+        <!--insert into answer(id, question_id, name, queue, correct, enabled)-->
+        <!--values(3, 1, 'Compilation fails due to an error on line 2', 3, false, true);-->
+        <!--insert into answer(id, question_id, name, queue, correct, enabled)-->
+        <!--values(4, 1, 'Compilation fails due to an error on line 3', 4, false, true);-->
+        <!--insert into answer(id, question_id, name, queue, correct, enabled)-->
+        <!--values(5, 1, 'Compilation fails due to an error on line 4', 5, false, true);-->
+        <!--insert into answer(id, question_id, name, queue, correct, enabled)-->
+        <!--values(6, 1, 'Compilation fails due to an error on line 9', 6, false, true);-->
+        <!--]]>-->
+        <!--</sql>-->
+        <!--<sql splitStatements="false">-->
+        <!--<![CDATA[-->
+        <!--insert into question(id, training_plan_test_id, name, type, enabled)-->
+        <!--values (2, 1, 'Дано:-->
+        <!--4. public class Frodo extends Hobbit {-->
+        <!--5. public static void main(String[] args) {-->
+        <!--6. Short myGold = 7;-->
+        <!--7. System.out.println(countGold(myGold, 6));-->
+        <!--8. }-->
+        <!--9. }-->
+        <!--10. class Hobbit {-->
+        <!--11. int countGold(int x, int y) { return x + y; }-->
+        <!--12. }-->
+        <!--Какой будет результат?', 0, true);-->
+
+        <!--insert into answer(id, question_id, name, queue, correct, enabled)-->
+        <!--values(7, 2, '13', 1, false, true);-->
+        <!--insert into answer(id, question_id, name, queue, correct, enabled)-->
+        <!--values(8, 2, 'Compilation fails due to multiple errors', 2, false, true);-->
+        <!--insert into answer(id, question_id, name, queue, correct, enabled)-->
+        <!--values(9, 2, 'Compilation fails due to an error on line 6', 3, false, true);-->
+        <!--insert into answer(id, question_id, name, queue, correct, enabled)-->
+        <!--values(10, 2, 'Compilation fails due to an error on line 7', 4, true, true);-->
+        <!--insert into answer(id, question_id, name, queue, correct, enabled)-->
+        <!--values(11, 2, 'Compilation fails due to an error on line 11', 5, false, true);-->
+        <!--]]>-->
+        <!--</sql>-->
+        <!--<sql splitStatements="false">-->
+        <!--<![CDATA[-->
+        <!--insert into question(id, training_plan_test_id, name, type, enabled)-->
+        <!--values (3, 1, 'Дано:-->
+        <!--class Clidder {-->
+        <!--private final void flipper() { System.out.println("Clidder"); }-->
+        <!--}-->
+        <!--public class Clidlet extends Clidder {-->
+        <!--public final void flipper() { System.out.println("Clidlet"); }-->
+        <!--public static void main(String [] args) {-->
+        <!--new Clidlet().flipper();-->
+        <!--}-->
+        <!--}-->
+        <!--Какой будет результат?', 0, true);-->
+
+        <!--insert into answer(id, question_id, name, queue, correct, enabled) values(12, 3, 'Clidlet', 1, true, true);-->
+        <!--insert into answer(id, question_id, name, queue, correct, enabled) values(13, 3, 'Clidder', 2, false, true);-->
+        <!--insert into answer(id, question_id, name, queue, correct, enabled) values(14, 3, 'Clidder Clidlet', 3, false, true);-->
+        <!--insert into answer(id, question_id, name, queue, correct, enabled) values(15, 3, 'Clidlet Clidder', 4, false, true);-->
+        <!--insert into answer(id, question_id, name, queue, correct, enabled) values(16, 3, 'Compilation fails', 5, false, true);-->
+        <!--]]>-->
+        <!--</sql>-->
+    </changeSet>
+</databaseChangeLog>

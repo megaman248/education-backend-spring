@@ -1,0 +1,40 @@
+GET http://localhost:8080/education/rest/users/auth
+#root:changeit
+Authorization: Basic cm9vdDpjaGFuZ2VpdA==
+#ivanov:changeit
+#Authorization: Basic aXZhbm92OmNoYW5nZWl0
+Content-Type: application/json;charset=UTF-8
+
+###
+GET http://localhost:8080/education/rest/users
+Authorization: Basic cm9vdDpjaGFuZ2VpdA==
+Content-Type: application/json;charset=UTF-8
+
+###
+GET http://localhost:8080/education/rest/users
+Authorization: Basic aXZhbm92OmNoYW5nZWl0
+Content-Type: application/json;charset=UTF-8
+
+###
+GET http://localhost:8080/education/rest/users/1
+Authorization: Basic aXZhbm92OmNoYW5nZWl0
+Content-Type: application/json;charset=UTF-8
+
+###
+POST http://localhost:8080/education/rest/users
+Authorization: Basic cm9vdDpjaGFuZ2VpdA==
+Content-Type: application/json
+Origin: http://localhost
+X-XSRF-TOKEN: 4450d77b-da25-491b-ab12-43d0babc3ab2
+
+{
+  "login": "ivanov123",
+  "password": "{bcrypt}$2a$10$ozs8PePF36zdYf9giH9dH.i884KrgDRBiCQKWXcLovY0kSC4RY1f2",
+  "enabled": true,
+  "person": {
+    "lastName": "Иванов",
+    "firstName": "Иван"
+  }
+}
+
+###

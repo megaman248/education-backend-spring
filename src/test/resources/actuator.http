@@ -1,0 +1,12 @@
+GET http://localhost:8080/education/rest/actuator
+#Authorization: Basic cm9vdDpjaGFuZ2VpdA==
+
+###
+GET http://localhost:8080/education/rest/actuator/info
+Authorization: Basic cm9vdDpjaGFuZ2VpdA==
+
+###
+GET http://localhost:8080/education/rest/actuator/health
+Authorization: Basic cm9vdDpjaGFuZ2VpdA==
+
+###

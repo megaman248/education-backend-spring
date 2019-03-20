@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd"
+                   logicalFilePath="changelog.xml">
+
+    <changeSet id="1" author="programmer" context="prod">
+        <preConditions>
+            <not>
+                <tableExists tableName="country"/>
+            </not>
+        </preConditions>
+        <createTable tableName="country" remarks="Страна">
+            <column name="id" type="bigserial" autoIncrement="true" remarks="Идентификатор">
+                <constraints primaryKey="true" primaryKeyName="pk_country_id" nullable="false"/>
+            </column>
+            <column name="code" type="int" remarks="Код ISO">
+                <constraints nullable="false" unique="true" uniqueConstraintName="unq_country_code"/>
+            </column>
+            <column name="iso2" type="char(2)" remarks="Код ISO 2">
+                <constraints nullable="false" unique="true" uniqueConstraintName="unq_country_iso2"/>
+            </column>
+            <column name="iso3" type="char(3)" remarks="Код ISO 3">
+                <constraints nullable="false" unique="true" uniqueConstraintName="unq_country_iso3"/>
+            </column>
+            <column name="enabled" type="boolean" defaultValue="false" remarks="Признак активности сущности">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="int" defaultValue="1" remarks="Версия для оптимистической блокировки">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="programmer" context="prod">
+        <preConditions>
+            <not>
+                <tableExists tableName="locale"/>
+            </not>
+        </preConditions>
+        <createTable tableName="locale" remarks="Локаль (место использования системы)">
+            <column name="id" type="bigserial" autoIncrement="true" remarks="Идентификатор">
+                <constraints primaryKey="true" primaryKeyName="pk_locale_id" nullable="false"/>
+            </column>
+            <column name="language" type="char(2)" remarks="Двузначный код языка">
+                <constraints nullable="false" unique="true" uniqueConstraintName="unq_locale_language"/>
+            </column>
+            <column name="country_id" type="bigint" remarks="Ссылка на страну">
+                <constraints nullable="false" foreignKeyName="fk_locale_country" references="country(id)"/>
+            </column>
+            <column name="enabled" type="boolean" defaultValue="false" remarks="Признак активности сущности">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="int" defaultValue="1" remarks="Версия для оптимистической блокировки">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3" author="programmer" context="prod">
+        <preConditions>
+            <not>
+                <tableExists tableName="timezone"/>
+            </not>
+        </preConditions>
+        <createTable tableName="timezone" remarks="Часовой пояс">
+            <column name="id" type="bigserial" autoIncrement="true" remarks="Идентификатор">
+                <constraints primaryKey="true" primaryKeyName="pk_timezone_id" nullable="false"/>
+            </column>
+            <column name="utc" type="varchar(9)" remarks="UTC">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="boolean" defaultValue="false" remarks="Признак активности сущности">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="int" defaultValue="1" remarks="Версия для оптимистической блокировки">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="4" author="programmer" context="prod">
+        <preConditions>
+            <not>
+                <tableExists tableName="person"/>
+            </not>
+        </preConditions>
+        <createTable tableName="person" remarks="Человек">
+            <column name="id" type="bigserial" autoIncrement="true" remarks="Идентификатор">
+                <constraints primaryKey="true" primaryKeyName="pk_person_id" nullable="false"/>
+            </column>
+            <column name="last_name" type="nvarchar(50)" remarks="Фамилия">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="nvarchar(50)" remarks="Имя">
+                <constraints nullable="false"/>
+            </column>
+            <column name="middle_name" type="nvarchar(50)" remarks="Отчество">
+                <constraints nullable="true"/>
+            </column>
+            <column name="version" type="int" defaultValue="1" remarks="Версия для оптимистической блокировки">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="5" author="programmer" context="prod">
+        <preConditions>
+            <not>
+                <tableExists tableName="users"/>
+            </not>
+        </preConditions>
+        <createTable tableName="users" remarks="Учётная запись пользователя системы">
+            <column name="id" type="bigserial" autoIncrement="true" remarks="Идентификатор">
+                <constraints primaryKey="true" primaryKeyName="pk_users_id" nullable="false"/>
+            </column>
+            <column name="login" type="nvarchar(20)" remarks="Логин">
+                <constraints nullable="false" unique="true" uniqueConstraintName="unq_users_login"/>
+            </column>
+            <column name="password" type="nvarchar(70)" remarks="Пароль">
+                <constraints nullable="false"/>
+            </column>
+            <column name="person_id" type="bigint" remarks="Ссылка на человека">
+                <constraints nullable="false" unique="true" uniqueConstraintName="unq_users_person"
+                             foreignKeyName="fk_users_person" references="person(id)"/>
+            </column>
+            <column name="valid_till" type="timestamp(6) without time zone"
+                    remarks="Дата окончания действия учётной записи">
+                <constraints nullable="true"/>
+            </column>
+            <column name="enabled" type="boolean" defaultValue="false" remarks="Признак активности сущности">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="int" defaultValue="1" remarks="Версия для оптимистической блокировки">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="6" author="programmer" context="prod">
+        <preConditions>
+            <not>
+                <tableExists tableName="users_setting"/>
+            </not>
+        </preConditions>
+        <createTable tableName="users_setting" remarks="Настройки пользователя системы">
+            <column name="id" type="bigserial" autoIncrement="true" remarks="Идентификатор">
+                <constraints primaryKey="true" primaryKeyName="pk_users_setting_id" nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint" remarks="Учётная запись пользователя системы">
+                <constraints nullable="false" foreignKeyName="fk_users_setting_user" references="users(id)"
+                             unique="true" uniqueConstraintName="unq_users_setting_user"/>
+            </column>
+            <column name="locale_id" type="bigint" remarks="Локаль">
+                <constraints nullable="false" foreignKeyName="fk_users_setting_locale" references="locale(id)"/>
+            </column>
+            <column name="timezone_id" type="bigint" remarks="Часовой пояс">
+                <constraints nullable="false" foreignKeyName="fk_users_setting_timezone" references="timezone(id)"/>
+            </column>
+            <column name="version" type="int" defaultValue="1" remarks="Версия для оптимистической блокировки">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="7" author="programmer" context="prod">
+        <preConditions>
+            <not>
+                <tableExists tableName="users_state"/>
+            </not>
+        </preConditions>
+        <createTable tableName="users_state" remarks="Состояние учётной записи пользователя">
+            <column name="id" type="bigserial" autoIncrement="true" remarks="Идентификатор">
+                <constraints primaryKey="true" primaryKeyName="pk_users_state_id" nullable="false"/>
+            </column>
+            <column name="user_id" type="int">
+                <constraints nullable="false" foreignKeyName="fk_users_state_users" references="users(id)"/>
+            </column>
+            <column name="code" type="smallint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="started_at" type="timestamp(6) without time zone">
+                <constraints nullable="true"/>
+            </column>
+            <column name="ended_at" type="timestamp(6) without time zone">
+                <constraints nullable="true"/>
+            </column>
+            <column name="note" type="nvarchar(255)" remarks="Причина смены статуса">
+                <constraints nullable="true"/>
+            </column>
+            <column name="version" type="int" defaultValue="1" remarks="Версия для оптимистической блокировки">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="8" author="programmer" context="prod">
+        <preConditions>
+            <not>
+                <tableExists tableName="groups"/>
+            </not>
+        </preConditions>
+        <createTable tableName="groups" remarks="Группа пользователей системы">
+            <column name="id" type="bigserial" autoIncrement="true" remarks="Идентификатор">
+                <constraints primaryKey="true" primaryKeyName="pk_groups_id" nullable="false"/>
+            </column>
+            <column name="code_name" type="varchar(50)" remarks="Код группы">
+                <constraints nullable="false" unique="true" uniqueConstraintName="unq_groups_code_name"/>
+            </column>
+            <column name="version" type="int" defaultValue="1" remarks="Версия для оптимистической блокировки">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="9" author="programmer" context="prod">
+        <preConditions>
+            <not>
+                <tableExists tableName="users_groups"/>
+            </not>
+        </preConditions>
+        <createTable tableName="users_groups" remarks="Связь пользователей системы с группами пользователей системы">
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_users_groups_users" references="users(id)"/>
+            </column>
+            <column name="group_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_users_groups_groups" references="groups(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="10" author="programmer" context="prod">
+        <preConditions>
+            <not>
+                <tableExists tableName="role"/>
+            </not>
+        </preConditions>
+        <createTable tableName="role" remarks="Роль пользователя системы">
+            <column name="id" type="bigserial" autoIncrement="true" remarks="Идентификатор">
+                <constraints primaryKey="true" primaryKeyName="pk_role_id" nullable="false"/>
+            </column>
+            <column name="code_name" type="varchar(50)" remarks="Код роли">
+                <constraints nullable="false" unique="true" uniqueConstraintName="unq_role_code_name"/>
+            </column>
+            <column name="version" type="int" defaultValue="1" remarks="Версия для оптимистической блокировки">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="11" author="programmer" context="prod">
+        <preConditions>
+            <not>
+                <tableExists tableName="groups_roles"/>
+            </not>
+        </preConditions>
+        <createTable tableName="groups_roles"
+                     remarks="Связь групп пользователей системы с ролями пользователей системы">
+            <column name="group_id" type="bigint" remarks="Ссылка на группу пользователя системы">
+                <constraints nullable="false" foreignKeyName="fk_groups_roles_groups" references="groups(id)"/>
+            </column>
+            <column name="role_id" type="bigint" remarks="Ссылка на роль пользователя системы">
+                <constraints nullable="false" foreignKeyName="fk_groups_roles_roles" references="role(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="12" author="programmer" context="prod">
+        <preConditions>
+            <not>
+                <tableExists tableName="faculty"/>
+            </not>
+        </preConditions>
+        <createTable tableName="faculty" remarks="Факультет/Департамент на предприятии">
+            <column name="id" type="bigserial" autoIncrement="true" remarks="Идентификатор">
+                <constraints primaryKey="true" primaryKeyName="pk_faculty_id" nullable="false"/>
+            </column>
+            <column name="name" type="nvarchar(255)" remarks="Имя факультета">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="boolean" defaultValue="false" remarks="Признак активности сущности">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="int" defaultValue="1" remarks="Версия для оптимистической блокировки">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="13" author="programmer" context="prod">
+        <preConditions>
+            <not>
+                <tableExists tableName="training"/>
+            </not>
+        </preConditions>
+        <createTable tableName="training" remarks="Предмет обучения">
+            <column name="id" type="bigserial" autoIncrement="true" remarks="Идентификатор">
+                <constraints primaryKey="true" primaryKeyName="pk_training_id" nullable="false"/>
+            </column>
+            <column name="opened_at" type="timestamp(6) without time zone" remarks="Дата начала обучения">
+                <constraints nullable="true"/>
+            </column>
+            <column name="closed_at" type="timestamp(6) without time zone" remarks="Дата окончания обучения">
+                <constraints nullable="true"/>
+            </column>
+            <column name="faculty_id" type="bigint" remarks="Ссылка на факультет">
+                <constraints nullable="false" foreignKeyName="fk_training_faculty" references="faculty(id)"/>
+            </column>
+            <column name="name" type="nvarchar(255)" remarks="Имя предмета обучения">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="boolean" defaultValue="false" remarks="Признак активности сущности">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="int" defaultValue="1" remarks="Версия для оптимистической блокировки">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="14" author="programmer" context="prod">
+        <preConditions>
+            <not>
+                <tableExists tableName="training_plan"/>
+            </not>
+        </preConditions>
+        <createTable tableName="training_plan"
+                     remarks="Учебный материал (план) преподавателя для обучения предмету">
+            <column name="id" type="bigserial" autoIncrement="true" remarks="Идентификатор">
+                <constraints primaryKey="true" primaryKeyName="pk_training_plan_id" nullable="false"/>
+            </column>
+            <column name="training_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_training_plan_training" references="training(id)"/>
+            </column>
+            <column name="tutor_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_training_plan_person" references="person(id)"/>
+            </column>
+            <column name="enabled" type="boolean" defaultValue="false" remarks="Признак активности сущности">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="int" defaultValue="1" remarks="Версия для оптимистической блокировки">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="15" author="programmer" context="prod">
+        <preConditions>
+            <not>
+                <tableExists tableName="training_plan_file"/>
+            </not>
+        </preConditions>
+        <createTable tableName="training_plan_file" remarks="Файл для плана обучения предмету">
+            <column name="id" type="bigserial" autoIncrement="true" remarks="Идентификатор">
+                <constraints primaryKey="true" primaryKeyName="pk_training_plan_file_id" nullable="false"/>
+            </column>
+            <column name="training_plan_id" type="bigint" remarks="Ссылка на с учебный материал (план) преподавателя">
+                <constraints nullable="false" foreignKeyName="fk_training_plan_file_training_plan"
+                             references="training_plan(id)"/>
+            </column>
+            <column name="name" type="nvarchar(255)" remarks="Имя файла">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="boolean" defaultValue="false" remarks="Признак активности сущности">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="int" defaultValue="1" remarks="Версия для оптимистической блокировки">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="16" author="programmer" context="prod">
+        <preConditions>
+            <not>
+                <tableExists tableName="training_plan_test"/>
+            </not>
+        </preConditions>
+        <createTable tableName="training_plan_test" remarks="Тест по учебному материалу (плану) преподавателя">
+            <column name="id" type="bigserial" autoIncrement="true" remarks="Идентификатор">
+                <constraints primaryKey="true" primaryKeyName="pk_training_plan_test_id" nullable="false"/>
+            </column>
+            <column name="training_plan_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_training_plan_test_training_plan"
+                             references="training_plan(id)"/>
+            </column>
+            <column name="type" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="boolean" defaultValue="false" remarks="Признак активности сущности">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="int" defaultValue="1" remarks="Версия для оптимистической блокировки">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="17" author="programmer" context="prod">
+        <preConditions>
+            <not>
+                <tableExists tableName="person_test"/>
+            </not>
+        </preConditions>
+        <createTable tableName="person_test" remarks="Тест ученика">
+            <column name="id" type="bigserial" autoIncrement="true" remarks="Идентификатор">
+                <constraints primaryKey="true" primaryKeyName="pk_person_test_id" nullable="false"/>
+            </column>
+            <column name="person_id" type="bigint" remarks="Ссылка на человека">
+                <constraints nullable="false" foreignKeyName="fk_person_test_person" references="person(id)"/>
+            </column>
+            <column name="training_plan_test_id" type="bigint" remarks="Ссылка на тест для плана обучения предмету">
+                <constraints nullable="false" foreignKeyName="fk_person_test_training_plan_test" references="training_plan_test(id)"/>
+            </column>
+            <column name="mark" type="smallint" remarks="Отметка за тест">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="int" defaultValue="1" remarks="Версия для оптимистической блокировки">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="18" author="programmer" context="prod">
+        <preConditions>
+            <not>
+                <tableExists tableName="question_group"/>
+            </not>
+        </preConditions>
+        <createTable tableName="question_group" remarks="Группа/тематика вопросов">
+            <column name="id" type="bigserial" autoIncrement="true" remarks="Идентификатор">
+                <constraints primaryKey="true" primaryKeyName="pk_question_group_id" nullable="false"/>
+            </column>
+            <column name="training_plan_test_id" type="bigint" remarks="Ссылка на тест для плана обучения предмету">
+                <constraints nullable="false" foreignKeyName="fk_question_group_training_plan_test" references="training_plan_test(id)"/>
+            </column>
+            <column name="name" type="nvarchar(100)" remarks="Наименование">
+                <constraints nullable="false"/>
+            </column>
+            <column name="percentage" type="smallint" remarks="Доля/процентное соотношение группы относительно других групп в пределах одного теста. Сумма всех долей должна составлять 100.">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="int" defaultValue="1" remarks="Версия для оптимистической блокировки">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="19" author="programmer" context="prod">
+        <preConditions>
+            <not>
+                <tableExists tableName="question"/>
+            </not>
+        </preConditions>
+        <createTable tableName="question" remarks="Вопрос для теста">
+            <column name="id" type="bigserial" autoIncrement="true" remarks="Идентификатор">
+                <constraints primaryKey="true" primaryKeyName="pk_question_id" nullable="false"/>
+            </column>
+            <column name="question_group_id" type="bigint" remarks="Ссылка на группу/тему вопросов">
+                <constraints nullable="false" foreignKeyName="fk_question_question_group"
+                             references="question_group(id)"/>
+            </column>
+            <column name="name" type="nvarchar(2000)" remarks="Вопрос">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="smallint" remarks="Тип вопроса">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="boolean" defaultValue="false" remarks="Признак активности сущности">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="int" defaultValue="1" remarks="Версия для оптимистической блокировки">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20" author="programmer" context="prod">
+        <preConditions>
+            <not>
+                <tableExists tableName="answer"/>
+            </not>
+        </preConditions>
+        <createTable tableName="answer" remarks="Ответ на вопрос">
+            <column name="id" type="bigserial" autoIncrement="true" remarks="Идентификатор">
+                <constraints primaryKey="true" primaryKeyName="pk_answer_id" nullable="false"/>
+            </column>
+            <column name="question_id" type="bigint" remarks="Ссылка на вопрос">
+                <constraints nullable="false" foreignKeyName="fk_answer_question" references="question(id)"/>
+            </column>
+            <column name="name" type="nvarchar(2000)" remarks="Вариант ответа">
+                <constraints nullable="false"/>
+            </column>
+            <column name="queue" type="int" defaultValue="1" remarks="Порядковый номер для отображения ответа">
+                <constraints nullable="false"/>
+            </column>
+            <column name="correct" type="boolean" defaultValue="false" remarks="Признак правильности ответа">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="boolean" defaultValue="false" remarks="Признак активности сущности">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="int" defaultValue="1" remarks="Версия для оптимистической блокировки">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="21" author="programmer" context="prod">
+        <preConditions>
+            <not>
+                <tableExists tableName="training_tag"/>
+            </not>
+        </preConditions>
+        <createTable tableName="training_tag" remarks="Тег для группировки предметов обучения">
+            <column name="id" type="bigserial" autoIncrement="true" remarks="Идентификатор">
+                <constraints primaryKey="true" primaryKeyName="pk_training_tag_id" nullable="false"/>
+            </column>
+            <column name="name" type="nvarchar(20)" remarks="Имя тега">
+                <constraints nullable="false" unique="true" uniqueConstraintName="unq_training_tag_name"/>
+            </column>
+            <column name="enabled" type="boolean" defaultValue="false" remarks="Признак активности сущности">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="int" defaultValue="1" remarks="Версия для оптимистической блокировки">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="22" author="programmer" context="prod">
+        <preConditions>
+            <not>
+                <tableExists tableName="trainings_tags"/>
+            </not>
+        </preConditions>
+        <createTable tableName="trainings_tags"
+                     remarks="Связь предметов обучения с тегами их группировки">
+            <column name="training_id" type="bigint" remarks="Ссылка на предмет обучения">
+                <constraints nullable="false" foreignKeyName="fk_trainings_tags_training"
+                             references="training(id)"/>
+            </column>
+            <column name="tag_id" type="bigint" remarks="Ссылка на тег для группировки предметов обучения">
+                <constraints nullable="false" foreignKeyName="fk_trainings_tags_tag"
+                             references="training_tag(id)"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint tableName="trainings_tags" columnNames="training_id,tag_id"
+                             constraintName="unq_trainings_tags"/>
+    </changeSet>
+</databaseChangeLog>

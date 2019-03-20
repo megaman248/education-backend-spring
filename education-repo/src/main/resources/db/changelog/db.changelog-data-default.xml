@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd"
+                   logicalFilePath="db.changelog-data-default.xml">
+
+    <changeSet id="data-default-0" author="programmer" context="prod">
+        <sql>
+            INSERT INTO country(code,iso2,iso3,enabled) VALUES(643,'RU','RUS',true);
+            INSERT INTO locale(language,country_id,enabled) VALUES('ru',1,true);
+            INSERT INTO timezone(utc,enabled) VALUES('GMT+03:00',true);
+
+            -- GROUP
+            INSERT INTO groups(code_name) VALUES('guest');
+            INSERT INTO groups(code_name) VALUES('admin');
+            INSERT INTO groups(code_name) VALUES('manager');
+            INSERT INTO groups(code_name) VALUES('tutor');
+            INSERT INTO groups(code_name) VALUES('student');
+
+            -- ROLE
+            INSERT INTO role(code_name) VALUES('ROLE_USER_CREATE');
+            INSERT INTO role(code_name) VALUES('ROLE_USER_READ');
+            INSERT INTO role(code_name) VALUES('ROLE_USER_READ_LIST');
+            INSERT INTO role(code_name) VALUES('ROLE_USER_UPDATE');
+            INSERT INTO role(code_name) VALUES('ROLE_USER_DELETE');
+        </sql>
+    </changeSet>
+</databaseChangeLog>
